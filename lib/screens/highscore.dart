@@ -5,9 +5,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 List<int> scoreLeaderboard = [0, 0, 0];
 List<String> leaderboardUser = ["", "", ""];
+List<String> gambar = [
+  "assets/images/rank1.png",
+  "assets/images/rank2.jpg",
+  "assets/images/rank3.jpg"
+];
 bool animated = false;
 late Timer _timer;
 double opacityLevel = 0;
+int _score = 0;
+String user_name = "";
 
 class HighScore extends StatefulWidget {
   @override
@@ -55,6 +62,8 @@ class _HighScoreState extends State<HighScore> {
       setState(() {
         animated = !animated;
         opacityLevel = 1 - opacityLevel;
+        getUserLeaderboard();
+        saveScore(_score, user_name);
       });
     });
   }
@@ -66,77 +75,24 @@ class _HighScoreState extends State<HighScore> {
       appBar: AppBar(
         title: Text("High Score"),
       ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.all(20),
-              child: Text("High Scores",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
-              alignment: Alignment.center),
-          AnimatedOpacity(
-            opacity: opacityLevel,
-            duration: const Duration(seconds: 2),
-            child: Image.asset("assets/images/rank1.png",
-                height: 60, alignment: Alignment.topLeft),
-          ),
-          AnimatedOpacity(
-            opacity: opacityLevel,
-            duration: const Duration(seconds: 2),
-            child: Image.asset("assets/images/rank2.jpg",
-                height: 60, alignment: Alignment.topLeft),
-          ),
-          AnimatedOpacity(
-            opacity: opacityLevel,
-            duration: const Duration(seconds: 2),
-            child: Image.asset("assets/images/rank3.jpg",
-                height: 60, alignment: Alignment.topLeft),
-          ),
-          Container(
-            height: 100.0,
-            alignment: Alignment.topLeft,
-            child: ListView.builder(
-              itemCount: leaderboardUser.length,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (BuildContext context, idx) {
-                return Column(
-                  children: [
-                    Container(
-                      height: 200.0,
-                      width: 300.0,
-                      child: Column(children: [
-                        Column(
-                          children: [
-                            Container(
-                              height: 25,
-                              width: 150,
-                              child: Text(
-                                leaderboardUser[idx],
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              height: 25,
-                              width: 150,
-                              child: Text(
-                                scoreLeaderboard[idx].toString(),
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            )
-                          ],
-                        )
-                      ]),
-                    )
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
+      body: ListView.builder(
+        itemBuilder: (context, idx) {
+          return Card(
+            child: ListTile(
+                title:
+                    Text(leaderboardUser[idx], style: TextStyle(fontSize: 30)),
+                subtitle: Text(
+                  scoreLeaderboard[idx].toString() + " pts",
+                  style: TextStyle(fontSize: 20),
+                ),
+                leading: AnimatedOpacity(
+                  opacity: opacityLevel,
+                  duration: const Duration(seconds: 3),
+                  child: Image.asset(gambar[idx]),
+                )),
+          );
+        },
+        itemCount: leaderboardUser.length,
       ),
     );
   }

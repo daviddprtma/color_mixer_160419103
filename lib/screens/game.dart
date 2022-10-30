@@ -244,7 +244,7 @@ class _GameState extends State<Game> {
             Container(
               alignment: Alignment(0.5, 0.8),
               child: Text(
-                "Score: ",
+                "Score: ${_score}",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
